@@ -4,7 +4,7 @@ from setuptools import find_packages
 setup(
     name='column_set',
     packages=find_packages(),
-    version='0.002',
+    version='0.003',
     license='MIT',
     description='A tiny library for abstraction of data source columns to reduce coupling.',
     author='Vahndi Minah',

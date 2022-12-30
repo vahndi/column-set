@@ -1,5 +1,9 @@
 from typing import Union, List, Dict
 
+# TODO: Implement whatever method needed to do if x in column_set
+# TODO: Add methods like '_starts_with' and '_contains' to return lists of matching column names
+# TODO: Add _drop and _keep methods to return a new ColumnSet
+
 
 class ColumnSet(object):
     """
@@ -13,6 +17,8 @@ class ColumnSet(object):
         mapping from column names to property names.
         """
         if isinstance(columns, list):
+            if len(set(columns)) != len(columns):
+                raise ValueError('Repeated column names')
             for column in columns:
                 setattr(self, ColumnSet._get_python_name(column), column)
             self._columns = {column: column for column in columns}
@@ -69,3 +75,17 @@ class ColumnSet(object):
     def __len__(self):
 
         return len(self._columns)
+
+    def __add__(self, other: 'ColumnSet') -> 'ColumnSet':
+        """
+        Combine this ColumnSet with another.
+        """
+        shared_keys = set(self._columns.keys()).intersection(other._columns.keys())
+        if len(shared_keys) > 0:
+            str_shared_keys = '{' + ', '.join(shared_keys) + '}'
+            raise KeyError(f'Cannot combine 2 ColumnSets with same keys: {str_shared_keys}.')
+        new_columns = {
+            **self._columns,
+            **other._columns
+        }
+        return ColumnSet(columns=new_columns)
